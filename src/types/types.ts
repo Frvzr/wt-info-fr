@@ -1,5 +1,5 @@
 export interface Item {
-  id: number
+  id: string
   name: string
   description: string
   category: string
@@ -26,4 +26,11 @@ export type OperatorType = 'contains' | 'equals' | 'gt' | 'lt'
 export interface FilterCondition {
   operator: OperatorType
   value: string
+}
+
+export interface Asset {
+  id: string
+  serial_number: string
+  part_number: string
+  description: string
 }

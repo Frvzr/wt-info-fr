@@ -1,9 +1,9 @@
 <template>
   <v-container>
-    <ParnetComponent />
+    <AsetList />
   </v-container>
 </template>
 
 <script setup lang="ts">
-import ParnetComponent from '@/components/ParentComponent.vue'
+import AsetList from '@/components/AssetList.vue'
 </script>
