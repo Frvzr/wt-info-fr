@@ -3,6 +3,10 @@ export interface Item {
   name: string
   description: string
   category: string
+  group: string
+  source: string
+  operation: string
+  department: string
 }
 
 export interface ServiceDetails {
@@ -33,4 +37,13 @@ export interface Asset {
   serial_number: string
   part_number: string
   description: string
+}
+
+export interface Activity {
+  id: string
+  serial_number: string
+  level: string
+  location: string
+  alias: string
+  completed_date: Date
 }
