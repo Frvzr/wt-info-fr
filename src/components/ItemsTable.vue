@@ -50,9 +50,13 @@ const itemsStore = useItemsStore()
 const items = computed(() => itemsStore.items)
 
 const headers = [
-  { title: 'Название', value: 'item_name' },
-  { title: 'Описание', value: 'item_description' },
-  { title: 'Категория', value: 'category_name' },
+  { title: 'Item No.', value: 'item' },
+  { title: 'Description', value: 'item_description' },
+  { title: 'Category', value: 'category' },
+  { title: 'Group', value: 'group' },
+  { title: 'Source', value: 'source' },
+  { title: 'Operation', value: 'operation' },
+  { title: 'Department', value: 'department' },
   { title: 'Actions', key: 'actions', align: 'end', sortable: false },
 ]
 onMounted(() => {
