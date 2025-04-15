@@ -34,3 +34,12 @@ export interface Asset {
   part_number: string
   description: string
 }
+
+export interface Activity {
+  id: string
+  serial_number: string
+  level: string
+  location: string
+  alias: string
+  completed_date: Date
+}
