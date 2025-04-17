@@ -73,11 +73,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import { useItemsStore } from '@/store/modules/items'
+import { computed, onMounted, ref } from 'vue'
+import { useItemStore } from '@/store/modules/items'
 
 const globalSearch = ref('')
-const itemsStore = useItemsStore()
+const itemsStore = useItemStore()
 const items = computed(() => itemsStore.items)
 
 const headers = [
@@ -199,7 +199,7 @@ const filteredItems = computed(() => {
 })
 
 onMounted(() => {
-  itemsStore.loadItemsWithCategory()
+  itemsStore.fetchItemsWithCategories()
 })
 
 // Методы для CRUD операций
