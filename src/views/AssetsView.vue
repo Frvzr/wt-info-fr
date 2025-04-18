@@ -7,3 +7,4 @@
 <script setup lang="ts">
 import AsetList from '@/components/AssetList.vue'
 </script>
+

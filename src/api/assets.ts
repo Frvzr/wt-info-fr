@@ -12,7 +12,7 @@ export async function fetchAsset(): Promise<Asset[]> {
   return data
 }
 
-export async function fetchItemById(id: number): Promise<Asset> {
+export async function fetchAssetById(id: string): Promise<Asset> {
   const response = await fetch(`${API_BASE_URL}/assets/${id}`)
   if (!response.ok) {
     throw new Error(`Ошибка при загрузке предмета с ID ${id}`)

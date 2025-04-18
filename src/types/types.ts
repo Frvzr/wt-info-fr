@@ -3,6 +3,10 @@ export interface Item {
   name: string
   description: string
   category: string
+  group: string
+  source: string
+  operation: string
+  department: string
 }
 
 export interface ServiceDetails {
