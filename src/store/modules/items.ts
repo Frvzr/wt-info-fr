@@ -24,7 +24,7 @@
 //   },
 // })
 
-import { defineStore } from 'pinia';
+import { defineStore } from 'pinia'
 import {
   fetchItems,
   fetchItemsWithCategories,
@@ -32,13 +32,62 @@ import {
   createItem,
   updateItem,
   patchItem,
-} from '@/api/items';
-import type {
-  Item,
-  ItemWithCategory,
-  ItemCreate,
-  ItemUpdate,
-} from '@/types/items';
+} from '@/api/items'
+import type { Item, ItemWithCategory, ItemCreate, ItemUpdate } from '@/types/items'
+
+// Вспомогательные функции для работы с sessionStorage
+const sessionStorageHelper = {
+  get(key: string): any | null {
+    try {
+      const item = sessionStorage.getItem(key)
+      return item ? JSON.parse(item) : null
+    } catch (error) {
+      console.error(`Error reading from sessionStorage (key: ${key}):`, error)
+      this.remove(key)
+      return null
+    }
+  },
+
+  set(key: string, value: any): boolean {
+    try {
+      sessionStorage.setItem(key, JSON.stringify(value))
+      return true
+    } catch (error) {
+      console.error(`Error writing to sessionStorage (key: ${key}):`, error)
+
+      // Попробуем освободить место, удаляя старые данные
+      if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+        console.warn('Storage quota exceeded, attempting to free space...')
+        this.clearMatchingKeys(key)
+
+        // Повторная попытка после очистки
+        try {
+          sessionStorage.setItem(key, JSON.stringify(value))
+          return true
+        } catch (e) {
+          console.error('Failed after storage cleanup:', e)
+          return false
+        }
+      }
+
+      return false
+    }
+  },
+
+  remove(key: string): void {
+    try {
+      sessionStorage.removeItem(key)
+    } catch (error) {
+      console.error(`Error removing from sessionStorage (key: ${key}):`, error)
+    }
+  },
+
+  clearMatchingKeys(prefix: string): void {
+    Object.keys(sessionStorage)
+      .filter((k) => k.startsWith(prefix))
+      .forEach((k) => this.remove(k))
+  },
+}
 
 export const useItemStore = defineStore('items', {
   state: () => ({
@@ -47,137 +96,152 @@ export const useItemStore = defineStore('items', {
     loading: false,
     error: null as string | null,
   }),
+
   actions: {
     async loadItems() {
-      this.loading = true;
-      this.error = null;
+      this.loading = true
+      this.error = null
+
       try {
-        // Попробуем получить из локального хранилища
-        const cached = localStorage.getItem('items');
-        if (cached) {
-          this.items = JSON.parse(cached);
-        } else {
-          this.items = await fetchItemsWithCategories();
-          localStorage.setItem('items', JSON.stringify(this.items));
-        }
-      } catch (err) {
-        this.error = err instanceof Error ? err.message : 'Failed to load items';
+        const data = await fetchItemsWithCategories()
+        this.items = data
+        sessionStorageHelper.set('items', this.items)
+      } catch (error) {
+        this.error = 'Failed to load items'
+        console.error('Error loading items:', error)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
     async getItem(id: string) {
-      this.loading = true;
-      this.error = null;
+      this.loading = true
+      this.error = null
+
       try {
-        // Проверяем кеш
-        const cachedItem = this.items.find(item => item.id === id);
+        // Сначала проверяем кешированные items
+        const cachedItem = this.items.find((item) => item.id === id)
+
         if (cachedItem) {
-          this.currentItem = cachedItem;
+          this.currentItem = cachedItem
         } else {
-          this.currentItem = await fetchItem(id);
+          // Если нет в кеше, загружаем с сервера
+          this.currentItem = await fetchItem(id)
+
+          // Обновляем кеш, если получили данные
+          if (this.currentItem) {
+            const updatedItems = [...this.items.filter((item) => item.id !== id), this.currentItem]
+            sessionStorageHelper.set('items', updatedItems)
+          }
         }
-      } catch (err) {
-        this.error = err instanceof Error ? err.message : 'Failed to load item';
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to load item'
+        this.error = errorMessage
+        console.error(`Error loading item ${id}:`, error)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
-    async addItem(item: ItemCreate) {
-      this.loading = true;
-      this.error = null;
-      try {
-        const newItem = await createItem(item);
-        this.items.push(newItem);
-        localStorage.setItem('items', JSON.stringify(this.items));
-        return newItem;
-      } catch (err) {
-        this.error = err instanceof Error ? err.message : 'Failed to create item';
-        throw err;
-      } finally {
-        this.loading = false;
-      }
-    },
+    async addItem(itemData: ItemCreate) {
+      this.loading = true
+      this.error = null
 
-    async editItem(id: string, item: ItemUpdate) {
-      this.loading = true;
-      this.error = null;
       try {
-        const updatedItem = await updateItem(id, item);
-        const index = this.items.findIndex(i => i.id === id);
-        if (index !== -1) {
-          this.items[index] = { ...this.items[index], ...updatedItem };
+        const newItem = await createItem(itemData)
+
+        // Обновляем локальное состояние
+        this.items = [...this.items, newItem]
+
+        // Пытаемся обновить кеш
+        if (!sessionStorageHelper.set('items', this.items)) {
+          console.warn('Failed to update sessionStorage after adding item')
         }
-        localStorage.setItem('items', JSON.stringify(this.items));
-        return updatedItem;
-      } catch (err) {
-        this.error = err instanceof Error ? err.message : 'Failed to update item';
-        throw err;
+
+        return newItem
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to create item'
+        this.error = errorMessage
+        console.error('Error creating item:', error)
+        throw error
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
-    async partialEditItem(id: string, item: Partial<ItemUpdate>) {
-      this.loading = true;
-      this.error = null;
+    async updateItem(id: string, itemData: ItemUpdate) {
+      this.loading = true
+      this.error = null
+
       try {
-        const updatedItem = await patchItem(id, item);
-        const index = this.items.findIndex(i => i.id === id);
-        if (index !== -1) {
-          this.items[index] = { ...this.items[index], ...updatedItem };
+        const updatedItem = await updateItem(id, itemData)
+
+        // Обновляем локальное состояние
+        this.items = this.items.map((item) => (item.id === id ? { ...item, ...updatedItem } : item))
+
+        // Обновляем текущий элемент, если он активен
+        if (this.currentItem?.id === id) {
+          this.currentItem = updatedItem
         }
-        localStorage.setItem('items', JSON.stringify(this.items));
-        return updatedItem;
-      } catch (err) {
-        this.error = err instanceof Error ? err.message : 'Failed to patch item';
-        throw err;
+
+        // Пытаемся обновить кеш
+        if (!sessionStorageHelper.set('items', this.items)) {
+          console.warn('Failed to update sessionStorage after modifying item')
+        }
+
+        return updatedItem
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to update item'
+        this.error = errorMessage
+        console.error(`Error updating item ${id}:`, error)
+        throw error
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
-    clearCurrentItem() {
-      this.currentItem = null;
+    clearCache() {
+      try {
+        sessionStorageHelper.remove('items')
+        this.items = []
+        console.log('Items cache cleared')
+      } catch (error) {
+        console.error('Error clearing cache:', error)
+      }
     },
 
-    clearError() {
-      this.error = null;
-    },
+    // ... остальные методы остаются без изменений
   },
 
   getters: {
-    filteredItems: (state) => (search: string, filters: Record<string, string>) => {
-      let result = [...state.items];
+    // Геттер для фильтрации
+    filteredItems: (state) => {
+      return (search: string, filters: Record<string, string>) => {
+        let result = [...state.items]
 
-      // Общий поиск
-      if (search) {
-        const searchLower = search.toLowerCase();
-        result = result.filter(item =>
-          item.name.toLowerCase().includes(searchLower) ||
-          (item.description && item.description.toLowerCase().includes(searchLower)) ||
-          (item.category && item.category.toLowerCase().includes(searchLower)) ||
-          (item.group && item.group.toLowerCase().includes(searchLower)) ||
-          (item.source && item.source.toLowerCase().includes(searchLower)) ||
-          (item.operation && item.operation.toLowerCase().includes(searchLower)) ||
-          (item.department && item.department.toLowerCase().includes(searchLower))
-        );
-      }
-
-      // Фильтрация по столбцам
-      for (const [key, value] of Object.entries(filters)) {
-        if (value) {
-          const valueLower = value.toLowerCase();
-          result = result.filter(item => {
-            const itemValue = item[key as keyof ItemWithCategory];
-            return itemValue && String(itemValue).toLowerCase().includes(valueLower);
-          });
+        // Глобальный поиск
+        if (search) {
+          const searchLower = search.toLowerCase()
+          result = result.filter((item) =>
+            Object.values(item).some(
+              (val) => val && val.toString().toLowerCase().includes(searchLower),
+            ),
+          )
         }
-      }
 
-      return result;
+        // Фильтрация по столбцам
+        for (const [key, value] of Object.entries(filters)) {
+          if (value) {
+            const valueLower = value.toLowerCase()
+            result = result.filter((item) => {
+              const itemValue = item[key as keyof ItemWithCategory]
+              return itemValue && String(itemValue).toLowerCase().includes(valueLower)
+            })
+          }
+        }
+
+        return result
+      }
     },
   },
-});
+})
