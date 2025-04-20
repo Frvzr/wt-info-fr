@@ -8,6 +8,8 @@ import AssetsView from '@/views/AssetsView.vue'
 import ItemDetailView from '@/views/ItemDetailView.vue'
 import ItemCreateView from '@/views/ItemCreateView.vue'
 import ItemEditView from '@/views/ItemEditView.vue'
+import RedressKitConsistView from '@/views/RedressKitsConsistView.vue'
+
 
 const routes: RouteRecordRaw[] = [
   {
@@ -46,6 +48,11 @@ const routes: RouteRecordRaw[] = [
     path: '/assets',
     name: 'assets',
     component: AssetsView,
+  },
+  {
+    path: '/redress-kits',
+    name: 'redress-kits',
+    component: RedressKitConsistView
   },
 ]
 
