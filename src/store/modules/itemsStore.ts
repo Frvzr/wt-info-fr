@@ -6,8 +6,8 @@ import {
   createItem,
   updateItem,
   patchItem,
-} from '@/api/items'
-import type { Item, ItemWithCategory, ItemCreate, ItemUpdate } from '@/types/items'
+} from '@/api/itemsApi'
+import type { Item, ItemWithCategory, ItemCreate, ItemUpdate } from '@/types/itemsTypes'
 
 // Вспомогательные функции для работы с sessionStorage
 const sessionStorageHelper = {

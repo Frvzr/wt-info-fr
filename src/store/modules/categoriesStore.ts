@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
-import { fetchCategories } from '@/api/categoryService'
+import { fetchCategories } from '@/api/categoriesApi'
+import type { Category } from '@/types/referenceTypes'
 
 export const useCategoryStore = defineStore('categories', {
   state: () => ({
-    categories: [] as Array<{ id: string; name: string }>,
+    categories: [] as Category[],
+    currentCategory: null as Category | null,
     loading: false,
     error: null as string | null,
   }),
@@ -11,6 +13,7 @@ export const useCategoryStore = defineStore('categories', {
   actions: {
     async loadCategories() {
       this.loading = true
+      this.error = null
       try {
         this.categories = await fetchCategories()
       } catch (err) {
