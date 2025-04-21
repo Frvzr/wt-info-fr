@@ -4,17 +4,39 @@
       <v-icon color="medium-emphasis" icon="mdi-book-multiple" size="x-small" start></v-icon> &nbsp;
       Item List
       <v-spacer></v-spacer>
-      <v-text-field v-model="globalSearch" density="compact" label="Search" prepend-inner-icon="mdi-magnify" variant="solo-filled" flat hide-details single-line></v-text-field>
+      <v-text-field
+        v-model="globalSearch"
+        density="compact"
+        label="Search"
+        prepend-inner-icon="mdi-magnify"
+        variant="solo-filled"
+        flat
+        hide-details
+        single-line
+      ></v-text-field>
     </v-card-title>
 
-    <v-data-table :items="filteredItems" :headers="processedHeaders" item-value="id" show-select items-per-page="25" fixed-header multi-sort>
+    <v-data-table
+      :items="filteredItems"
+      :headers="processedHeaders"
+      item-value="id"
+      show-select
+      items-per-page="25"
+      fixed-header
+      multi-sort
+    >
       <!-- Кастомный заголовок с кнопкой фильтра -->
       <template v-slot:header="{ header }">
         <th v-if="header.key === 'data-table-select'">
           <!-- Индикатор фильтров -->
           <v-tooltip location="bottom">
             <template v-slot:activator="{ props }">
-              <v-icon v-bind="props" :color="hasActiveFilters ? 'primary' : 'medium-emphasis'" icon="mdi-filter" size="small"></v-icon>
+              <v-icon
+                v-bind="props"
+                :color="hasActiveFilters ? 'primary' : 'medium-emphasis'"
+                icon="mdi-filter"
+                size="small"
+              ></v-icon>
             </template>
             <span>Active filters: {{ activeFilterCount }}</span>
           </v-tooltip>
@@ -24,8 +46,18 @@
             {{ header.title }}
 
             <!-- Кнопка фильтра (только для сортируемых столбцов) -->
-            <v-btn v-if="header.sortable" icon variant="text" size="x-small" @click.stop="openFilterDialog(header)" class="ml-1">
-              <v-icon :color="columnFilters[header.key]?.length ? 'primary' : 'medium-emphasis'" size="small">
+            <v-btn
+              v-if="header.sortable"
+              icon
+              variant="text"
+              size="x-small"
+              @click.stop="openFilterDialog(header)"
+              class="ml-1"
+            >
+              <v-icon
+                :color="columnFilters[header.key]?.length ? 'primary' : 'medium-emphasis'"
+                size="small"
+              >
                 mdi-filter
               </v-icon>
             </v-btn>
@@ -36,14 +68,31 @@
       <template v-slot:top>
         <v-toolbar flat>
           <v-spacer></v-spacer>
-          <v-btn class="me-2" prepend-icon="mdi-plus" rounded="lg" text="Create" border @click="add"></v-btn>
+          <v-btn
+            class="me-2"
+            prepend-icon="mdi-plus"
+            rounded="lg"
+            text="Create"
+            border
+            @click="add"
+          ></v-btn>
         </v-toolbar>
       </template>
 
       <template v-slot:[`item.actions`]="{ item }">
         <div class="d-flex ga-2 justify-end">
-          <v-icon color="medium-emphasis" icon="mdi-pencil" size="small" @click="edit(item.id)"></v-icon>
-          <v-icon color="medium-emphasis" icon="mdi-delete" size="small" @click="remove(item.id)"></v-icon>
+          <v-icon
+            color="medium-emphasis"
+            icon="mdi-pencil"
+            size="small"
+            @click="edit(item.id)"
+          ></v-icon>
+          <v-icon
+            color="medium-emphasis"
+            icon="mdi-delete"
+            size="small"
+            @click="remove(item.id)"
+          ></v-icon>
         </div>
       </template>
     </v-data-table>
@@ -53,11 +102,25 @@
       <v-card>
         <v-card-title>Filter by {{ currentFilterTitle }}</v-card-title>
         <v-card-text>
-          <v-text-field v-model="filterSearch" density="compact" label="Search in filters" prepend-inner-icon="mdi-magnify" variant="outlined" class="mb-4" @input="updateFilteredOptions"></v-text-field>
+          <v-text-field
+            v-model="filterSearch"
+            density="compact"
+            label="Search in filters"
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            class="mb-4"
+            @input="updateFilteredOptions"
+          ></v-text-field>
 
           <v-virtual-scroll :items="filteredOptions" height="300" item-height="50">
             <template v-slot:default="{ item }">
-              <v-checkbox v-model="selectedFilters" :label="item" :value="item" density="comfortable" hide-details></v-checkbox>
+              <v-checkbox
+                v-model="selectedFilters"
+                :label="item"
+                :value="item"
+                density="comfortable"
+                hide-details
+              ></v-checkbox>
             </template>
           </v-virtual-scroll>
         </v-card-text>
@@ -74,7 +137,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { useItemStore } from '@/store/modules/items'
+import { useItemStore } from '@/store/modules/itemsStore'
 
 const globalSearch = ref('')
 const itemsStore = useItemStore()
@@ -101,9 +164,9 @@ const columnFilters = ref<Record<string, string[]>>({})
 const filteredOptions = ref<string[]>([])
 
 const processedHeaders = computed(() => {
-  return headers.map(header => ({
+  return headers.map((header) => ({
     ...header,
-    class: columnFilters.value[header.key]?.length ? 'active-filter-column' : ''
+    class: columnFilters.value[header.key]?.length ? 'active-filter-column' : '',
   }))
 })
 
@@ -126,14 +189,14 @@ const updateFilteredOptions = () => {
     return
   }
 
-  filteredOptions.value = options.filter(option =>
-    option.toLowerCase().includes(filterSearch.value.toLowerCase())
+  filteredOptions.value = options.filter((option) =>
+    option.toLowerCase().includes(filterSearch.value.toLowerCase()),
   )
 }
 
 const getUniqueValuesForColumn = (columnKey: string) => {
   const uniqueValues = new Set<string>()
-  items.value.forEach(item => {
+  items.value.forEach((item) => {
     const value = item[columnKey]
     if (value !== undefined && value !== null) {
       uniqueValues.add(String(value))
@@ -146,7 +209,7 @@ const applyFilters = () => {
   if (selectedFilters.value.length > 0) {
     columnFilters.value = {
       ...columnFilters.value,
-      [currentFilterKey.value]: selectedFilters.value
+      [currentFilterKey.value]: selectedFilters.value,
     }
   } else {
     const { [currentFilterKey.value]: _, ...rest } = columnFilters.value
@@ -178,16 +241,14 @@ const filteredItems = computed(() => {
   // Применяем глобальный поиск
   if (globalSearch.value) {
     const searchTerm = globalSearch.value.toLowerCase()
-    result = result.filter(item =>
-      Object.values(item).some(val =>
-        String(val).toLowerCase().includes(searchTerm)
-      )
+    result = result.filter((item) =>
+      Object.values(item).some((val) => String(val).toLowerCase().includes(searchTerm)),
     )
   }
 
   // Применяем фильтры по столбцам
   if (hasActiveFilters.value) {
-    result = result.filter(item => {
+    result = result.filter((item) => {
       return Object.entries(columnFilters.value).every(([key, values]) => {
         if (!values || values.length === 0) return true
         return values.includes(String(item[key]))

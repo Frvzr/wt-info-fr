@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ItemTable from '@/components/ItemTable.vue';
-import { useItemStore } from '@/store/modules/items';
+import ItemTable from '@/components/ItemTable.vue'
+import { useItemStore } from '@/store/modules/itemsStore'
 
-const itemStore = useItemStore();
+const itemStore = useItemStore()
 </script>
 
 <template>
