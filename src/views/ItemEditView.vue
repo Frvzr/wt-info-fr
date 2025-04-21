@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ItemForm from '@/components/ItemForm.vue'
-import { useItemStore } from '@/store/modules/items'
+import { useItemStore } from '@/store/modules/itemsStore'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 
@@ -12,9 +12,9 @@ onMounted(() => {
   itemStore.getItem(route.params.id as string)
 })
 
-const handleSubmit = async (item: ItemUpdate) => {
+const handleSubmit = async (formData: any) => {
   try {
-    await itemStore.editItem(route.params.id as string, item)
+    await itemStore.updateItem(route.params.id as string, formData)
     router.push(`/items/${route.params.id}`)
   } catch (error) {
     console.error('Error updating item:', error)

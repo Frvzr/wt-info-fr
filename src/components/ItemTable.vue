@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useItemStore } from '@/store/modules/items'
+import { useItemStore } from '@/store/modules/itemsStore'
 
 const itemStore = useItemStore()
 

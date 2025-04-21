@@ -1,29 +1,3 @@
-// import { defineStore } from 'pinia'
-// import type { Item } from '@/types/types'
-// import { fetchItems, fetchItemWithCategory } from '@/api/items'
-
-// export const useItemsStore = defineStore('items', {
-//   state: () => ({
-//     items: [] as Item[],
-//   }),
-//   actions: {
-//     async loadItems() {
-//       try {
-//         this.items = await fetchItems()
-//       } catch (error) {
-//         console.error('Ошибка при загрузке предметов:', error)
-//       }
-//     },
-//     async loadItemsWithCategory() {
-//       try {
-//         this.items = await fetchItemWithCategory()
-//       } catch (error) {
-//         console.error('Ошибка при загрузке предметов:', error)
-//       }
-//     },
-//   },
-// })
-
 import { defineStore } from 'pinia'
 import {
   fetchItems,
@@ -32,8 +6,8 @@ import {
   createItem,
   updateItem,
   patchItem,
-} from '@/api/items'
-import type { Item, ItemWithCategory, ItemCreate, ItemUpdate } from '@/types/items'
+} from '@/api/itemsApi'
+import type { Item, ItemWithCategory, ItemCreate, ItemUpdate } from '@/types/itemsTypes'
 
 // Вспомогательные функции для работы с sessionStorage
 const sessionStorageHelper = {
@@ -143,58 +117,46 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async addItem(itemData: ItemCreate) {
+    async createItem(itemData: any) {
       this.loading = true
-      this.error = null
-
       try {
-        const newItem = await createItem(itemData)
+        const response = await fetch('/api/v1/items', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(itemData),
+        })
 
-        // Обновляем локальное состояние
-        this.items = [...this.items, newItem]
+        if (!response.ok) throw new Error('Failed to create item')
 
-        // Пытаемся обновить кеш
-        if (!sessionStorageHelper.set('items', this.items)) {
-          console.warn('Failed to update sessionStorage after adding item')
-        }
-
+        const newItem = await response.json()
+        this.items.push(newItem)
         return newItem
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Failed to create item'
-        this.error = errorMessage
-        console.error('Error creating item:', error)
-        throw error
       } finally {
         this.loading = false
       }
     },
 
-    async updateItem(id: string, itemData: ItemUpdate) {
+    async updateItem(id: string, itemData: any) {
       this.loading = true
-      this.error = null
-
       try {
-        const updatedItem = await updateItem(id, itemData)
+        const response = await fetch(`/api/v1/items/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(itemData),
+        })
 
-        // Обновляем локальное состояние
-        this.items = this.items.map((item) => (item.id === id ? { ...item, ...updatedItem } : item))
+        if (!response.ok) throw new Error('Failed to update item')
 
-        // Обновляем текущий элемент, если он активен
-        if (this.currentItem?.id === id) {
-          this.currentItem = updatedItem
+        const updatedItem = await response.json()
+        const index = this.items.findIndex((item) => item.id === id)
+        if (index !== -1) {
+          this.items[index] = updatedItem
         }
-
-        // Пытаемся обновить кеш
-        if (!sessionStorageHelper.set('items', this.items)) {
-          console.warn('Failed to update sessionStorage after modifying item')
-        }
-
         return updatedItem
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Failed to update item'
-        this.error = errorMessage
-        console.error(`Error updating item ${id}:`, error)
-        throw error
       } finally {
         this.loading = false
       }
@@ -209,8 +171,6 @@ export const useItemStore = defineStore('items', {
         console.error('Error clearing cache:', error)
       }
     },
-
-    // ... остальные методы остаются без изменений
   },
 
   getters: {
