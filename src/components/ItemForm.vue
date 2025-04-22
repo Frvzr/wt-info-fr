@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useItemStore } from '@/store/modules/itemsStore'
 import { useCategoryStore } from '@/store/modules/categoriesStore'
 import { useGroupStore } from '@/store/modules/groupsStore'
@@ -74,64 +74,24 @@ const submit = () => {
 
 <template>
   <v-form @submit.prevent="submit">
-    <v-text-field
-      v-model="form.name"
-      label="Name"
-      :rules="[(v) => !!v || 'Name is required']"
-      required
-    />
+    <v-text-field v-model="form.name" label="Name" :rules="[(v) => !!v || 'Name is required']" required />
 
     <v-textarea v-model="form.description" label="Description" rows="2" />
 
     <!-- Выпадающий список для категорий -->
-    <v-select
-      v-model="form.category_id"
-      :items="categoryStore.categories"
-      item-title="name"
-      item-value="id"
-      label="Category"
-      clearable
-    />
+    <v-select v-model="form.category_id" :items="categoryStore.categories" item-title="name" item-value="id" label="Category" clearable />
 
     <!-- Выпадающий список для групп -->
-    <v-select
-      v-model="form.group_id"
-      :items="groupStore.groups"
-      item-title="name"
-      item-value="id"
-      label="Group"
-      clearable
-    />
+    <v-select v-model="form.group_id" :items="groupStore.groups" item-title="name" item-value="id" label="Group" clearable />
 
     <!-- Выпадающий список для источников -->
-    <v-select
-      v-model="form.source_id"
-      :items="sourceStore.sources"
-      item-title="name"
-      item-value="id"
-      label="Source"
-      clearable
-    />
+    <v-select v-model="form.source_id" :items="sourceStore.sources" item-title="name" item-value="id" label="Source" clearable />
 
     <!-- Выпадающий список для операций -->
-    <v-select
-      v-model="form.operation_id"
-      :items="operationStore.operations"
-      item-title="name"
-      item-value="id"
-      label="Operation"
-      clearable
-    />
+    <v-select v-model="form.operation_id" :items="operationStore.operations" item-title="name" item-value="id" label="Operation" clearable />
 
     <!-- Выпадающий список для департаментов -->
-    <v-select
-      v-model="form.department_id"
-      :items="departmentStore.departments"
-      item-title="name"
-      item-value="id"
-      label="Department"
-      clearable
-    />
+    <v-select v-model="form.department_id" :items="departmentStore.departments" item-title="name" item-value="id" label="Department" clearable />
 
     <v-btn type="submit" color="primary" class="mt-4">
       {{ isEditing ? 'Update' : 'Create' }}

@@ -53,7 +53,12 @@ export const updateItem = async (id: string, item: ItemUpdate): Promise<Item> =>
     },
     body: JSON.stringify(item),
   })
-  if (!response.ok) throw new Error('Failed to update item')
+  console.log(response)
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error("Детали ошибки:", errorData);
+    throw new Error(`Ошибка ${response.status}: ${JSON.stringify(errorData)}`);
+  }
   return await response.json()
 }
 

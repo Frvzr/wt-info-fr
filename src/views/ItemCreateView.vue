@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import ItemForm from '@/components/ItemForm.vue'
 import { useItemStore } from '@/store/modules/itemsStore'
+import type { ItemCreate } from '@/types/itemsTypes'
 import { useRouter } from 'vue-router'
 
 const itemStore = useItemStore()
 const router = useRouter()
 
-const handleSubmit = async (formData: any) => {
+const handleSubmit = async (formData: ItemCreate) => {
   try {
     await itemStore.createItem(formData)
     router.push('/items')

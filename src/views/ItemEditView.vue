@@ -25,12 +25,7 @@ const handleSubmit = async (formData: any) => {
 <template>
   <div>
     <h1 class="text-h4 mb-4">Edit Item</h1>
-    <ItemForm
-      v-if="itemStore.currentItem"
-      :item="itemStore.currentItem"
-      isEditing
-      @submit="handleSubmit"
-    />
+    <ItemForm v-if="itemStore.currentItem" :item="itemStore.currentItem" isEditing @submit="handleSubmit" />
     <div v-else-if="itemStore.loading">Loading...</div>
     <div v-else-if="itemStore.error" class="error">{{ itemStore.error }}</div>
   </div>

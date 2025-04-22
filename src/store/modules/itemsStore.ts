@@ -130,18 +130,9 @@ export const useItemStore = defineStore('items', {
 
     async updateItem(id: string, itemData: any) {
       this.loading = true
+      console.log(itemData)
       try {
-        const response = await fetch(`/api/v1/items/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(itemData),
-        })
-
-        if (!response.ok) throw new Error('Failed to update item')
-
-        const updatedItem = await response.json()
+        const updatedItem = await updateItem(id, itemData)
         const index = this.items.findIndex((item) => item.id === id)
         if (index !== -1) {
           this.items[index] = updatedItem
