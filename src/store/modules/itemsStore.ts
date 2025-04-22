@@ -120,17 +120,7 @@ export const useItemStore = defineStore('items', {
     async createItem(itemData: any) {
       this.loading = true
       try {
-        const response = await fetch('/api/v1/items', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(itemData),
-        })
-
-        if (!response.ok) throw new Error('Failed to create item')
-
-        const newItem = await response.json()
+        const newItem = await createItem(itemData)
         this.items.push(newItem)
         return newItem
       } finally {
