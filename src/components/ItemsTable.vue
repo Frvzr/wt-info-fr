@@ -260,7 +260,7 @@ const filteredItems = computed(() => {
 })
 
 onMounted(() => {
-  itemsStore.fetchItemsWithCategories()
+  itemsStore.loadItems()
 })
 
 // Методы для CRUD операций
