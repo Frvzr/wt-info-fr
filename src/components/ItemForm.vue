@@ -36,15 +36,14 @@ onMounted(async () => {
 
 // Форма
 const form = ref({
-  name: '',
-  description: '',
-  category_id: null as string | null,
-  group_id: null as string | null,
-  source_id: null as string | null,
-  operation_id: null as string | null,
-  department_id: null as string | null,
+  name: props.item?.name || '',
+  description: props.item?.description || '',
+  category_id: props.item?.category_id ? String(props.item.category_id) : null,
+  group_id: props.item?.group_id ? String(props.item.group_id) : null,
+  source_id: props.item?.source_id ? String(props.item.source_id) : null,
+  operation_id: props.item?.operation_id ? String(props.item.operation_id) : null,
+  department_id: props.item?.department_id ? String(props.item.department_id) : null,
 })
-
 // Автоматическое обновление формы при изменении props.item или загрузке справочников
 watchEffect(() => {
   if (props.isEditing && props.item) {
@@ -75,65 +74,24 @@ const submit = () => {
 
 <template>
   <v-form @submit.prevent="submit">
-    <v-text-field
-      v-model="form.name"
-      label="Name"
-      :rules="[(v) => !!v || 'Name is required']"
-      required
-    />
+    <v-text-field v-model="form.name" label="Name" :rules="[(v) => !!v || 'Name is required']" required />
 
     <v-textarea v-model="form.description" label="Description" rows="2" />
 
     <!-- Выпадающий список для категорий -->
-    <v-select
-      v-model="form.category_id"
-      :items="categoryStore.categories"
-      item-title="name"
-      item-value="id"
-      label="Category"
-      :loading="categoryStore.loading"
-      clearable
-    />
+    <v-select v-model="form.category_id" :items="categoryStore.categories" item-title="name" item-value="id" label="Category" :loading="categoryStore.loading" clearable />
 
     <!-- Выпадающий список для групп -->
-    <v-select
-      v-model="form.group_id"
-      :items="groupStore.groups"
-      item-title="name"
-      item-value="id"
-      label="Group"
-      clearable
-    />
+    <v-select v-model="form.group_id" :items="groupStore.groups" item-title="name" item-value="id" label="Group" clearable />
 
     <!-- Выпадающий список для источников -->
-    <v-select
-      v-model="form.source_id"
-      :items="sourceStore.sources"
-      item-title="name"
-      item-value="id"
-      label="Source"
-      clearable
-    />
+    <v-select v-model="form.source_id" :items="sourceStore.sources" item-title="name" item-value="id" label="Source" clearable />
 
     <!-- Выпадающий список для операций -->
-    <v-select
-      v-model="form.operation_id"
-      :items="operationStore.operations"
-      item-title="name"
-      item-value="id"
-      label="Operation"
-      clearable
-    />
+    <v-select v-model="form.operation_id" :items="operationStore.operations" item-title="name" item-value="id" label="Operation" clearable />
 
     <!-- Выпадающий список для департаментов -->
-    <v-select
-      v-model="form.department_id"
-      :items="departmentStore.departments"
-      item-title="name"
-      item-value="id"
-      label="Department"
-      clearable
-    />
+    <v-select v-model="form.department_id" :items="departmentStore.departments" item-title="name" item-value="id" label="Department" clearable />
 
     <v-btn type="submit" color="primary" class="mt-4">
       {{ isEditing ? 'Update' : 'Create' }}

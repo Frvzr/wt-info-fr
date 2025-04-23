@@ -11,7 +11,7 @@ import type { Item, ItemWithCategory, ItemCreate, ItemUpdate } from '@/types/ite
 
 // Вспомогательные функции для работы с sessionStorage
 const sessionStorageHelper = {
-  get(key: string): any | null {
+  get(key: string): Item | null {
     try {
       const item = sessionStorage.getItem(key)
       return item ? JSON.parse(item) : null
@@ -95,12 +95,14 @@ export const useItemStore = defineStore('items', {
       try {
         // Сначала проверяем кешированные items
         const cachedItem = this.items.find((item) => item.id === id)
+        console.log('cachedItem:',cachedItem)
 
         if (cachedItem) {
           this.currentItem = cachedItem
         } else {
           // Если нет в кеше, загружаем с сервера
           this.currentItem = await fetchItem(id)
+          console.log('this.currentItem:',this.currentItem)
 
           // Обновляем кеш, если получили данные
           if (this.currentItem) {
@@ -117,7 +119,7 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async createItem(itemData: any) {
+    async createItem(itemData: ItemCreate) {
       this.loading = true
       try {
         const newItem = await createItem(itemData)
@@ -128,15 +130,14 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async updateItem(id: string, itemData: any) {
+    async updateItem(id: string, itemData: ItemUpdate) {
       this.loading = true
-      console.log(itemData)
       try {
         const updatedItem = await updateItem(id, itemData)
-        const index = this.items.findIndex((item) => item.id === id)
-        if (index !== -1) {
-          this.items[index] = updatedItem
-        }
+
+        // Обновляем данные в хранилище
+        await this.getItem(id)
+
         return updatedItem
       } finally {
         this.loading = false

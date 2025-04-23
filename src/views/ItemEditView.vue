@@ -2,21 +2,30 @@
 import ItemForm from '@/components/ItemForm.vue'
 import { useItemStore } from '@/store/modules/itemsStore'
 import { useRoute, useRouter } from 'vue-router'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import type { ItemUpdate } from '@/types/itemsTypes'
 
 const itemStore = useItemStore()
 const route = useRoute()
 const router = useRouter()
+const isReady = ref(false)
 
-onMounted(() => {
-  itemStore.getItem(route.params.id as string)
+onMounted(async () => {
+  try {
+    await Promise.all([
+      itemStore.getItem(route.params.id as string),
+    ])
+    isReady.value = true
+  } catch (error) {
+    console.error('Error loading data:', error)
+  }
 })
 
 const handleSubmit = async (formData: ItemUpdate) => {
   try {
     await itemStore.updateItem(route.params.id as string, formData)
     router.push(`/items/${route.params.id}`)
+
   } catch (error) {
     console.error('Error updating item:', error)
   }
@@ -26,13 +35,10 @@ const handleSubmit = async (formData: ItemUpdate) => {
 <template>
   <div>
     <h1 class="text-h4 mb-4">EDIT ITEM</h1>
-    <ItemForm
-      v-if="itemStore.currentItem"
-      :item="itemStore.currentItem"
-      isEditing
-      @submit="handleSubmit"
-    />
-    <div v-else-if="itemStore.loading">Loading...</div>
-    <div v-else-if="itemStore.error" class="error">{{ itemStore.error }}</div>
+    <template v-if="isReady">
+      <ItemForm v-if="itemStore.currentItem" :item="itemStore.currentItem" isEditing @submit="handleSubmit" />
+      <div v-else class="error">Item not found</div>
+    </template>
+    <div v-else>Loading...</div>
   </div>
 </template>
