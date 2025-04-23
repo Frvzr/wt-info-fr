@@ -9,7 +9,14 @@ const itemStore = useItemStore()
   <div>
     <v-row class="mb-4">
       <v-col cols="12">
-        <v-btn to="/items/create" color="primary">Create New Item</v-btn>
+        <v-btn
+          to="/items/create"
+          class="me-2"
+          prepend-icon="mdi-plus"
+          rounded="lg"
+          text="Create"
+          border
+        ></v-btn>
       </v-col>
     </v-row>
 

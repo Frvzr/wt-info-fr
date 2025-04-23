@@ -30,6 +30,7 @@ export const fetchItemsWithCategories = async (): Promise<ItemWithCategory[]> =>
 export const fetchItem = async (id: string): Promise<Item> => {
   const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}${id}`)
   if (!response.ok) throw new Error('Item not found')
+  console.log(response)
   return await response.json()
 }
 
@@ -55,9 +56,9 @@ export const updateItem = async (id: string, item: ItemUpdate): Promise<Item> =>
   })
   console.log(response)
   if (!response.ok) {
-    const errorData = await response.json();
-    console.error("Детали ошибки:", errorData);
-    throw new Error(`Ошибка ${response.status}: ${JSON.stringify(errorData)}`);
+    const errorData = await response.json()
+    console.error('Детали ошибки:', errorData)
+    throw new Error(`Ошибка ${response.status}: ${JSON.stringify(errorData)}`)
   }
   return await response.json()
 }

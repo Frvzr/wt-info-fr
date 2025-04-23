@@ -19,7 +19,7 @@ const handleSubmit = async (formData: ItemCreate) => {
 
 <template>
   <div>
-    <h1 class="text-h4 mb-4">Create New Item</h1>
+    <h1 class="text-h4 mb-4">CREATE NEW ITEM</h1>
     <ItemForm @submit="handleSubmit" />
   </div>
 </template>
