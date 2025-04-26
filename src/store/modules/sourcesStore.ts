@@ -16,10 +16,10 @@ export const useSourceStore = defineStore('sources', {
       try {
         this.sources = await fetchSource()
       } catch (err) {
-         this.error = err instanceof Error ? err.message : 'Failed to load sources'
+        this.error = err instanceof Error ? err.message : 'Failed to load sources'
       } finally {
         this.loading = false
       }
-   },
+    },
   },
 })

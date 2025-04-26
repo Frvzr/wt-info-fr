@@ -11,7 +11,7 @@ import type { Item, ItemWithCategory, ItemCreate, ItemUpdate } from '@/types/ite
 
 // Вспомогательные функции для работы с sessionStorage
 const sessionStorageHelper = {
-  get(key: string): any | null {
+  get(key: string): Item | null {
     try {
       const item = sessionStorage.getItem(key)
       return item ? JSON.parse(item) : null
@@ -95,12 +95,14 @@ export const useItemStore = defineStore('items', {
       try {
         // Сначала проверяем кешированные items
         const cachedItem = this.items.find((item) => item.id === id)
+        console.log('cachedItem:',cachedItem)
 
         if (cachedItem) {
           this.currentItem = cachedItem
         } else {
           // Если нет в кеше, загружаем с сервера
           this.currentItem = await fetchItem(id)
+          console.log('this.currentItem:',this.currentItem)
 
           // Обновляем кеш, если получили данные
           if (this.currentItem) {
@@ -117,20 +119,10 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async createItem(itemData: any) {
+    async createItem(itemData: ItemCreate) {
       this.loading = true
       try {
-        const response = await fetch('/api/v1/items', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(itemData),
-        })
-
-        if (!response.ok) throw new Error('Failed to create item')
-
-        const newItem = await response.json()
+        const newItem = await createItem(itemData)
         this.items.push(newItem)
         return newItem
       } finally {
@@ -138,24 +130,14 @@ export const useItemStore = defineStore('items', {
       }
     },
 
-    async updateItem(id: string, itemData: any) {
+    async updateItem(id: string, itemData: ItemUpdate) {
       this.loading = true
       try {
-        const response = await fetch(`/api/v1/items/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(itemData),
-        })
+        const updatedItem = await updateItem(id, itemData)
 
-        if (!response.ok) throw new Error('Failed to update item')
+        // Обновляем данные в хранилище
+        await this.getItem(id)
 
-        const updatedItem = await response.json()
-        const index = this.items.findIndex((item) => item.id === id)
-        if (index !== -1) {
-          this.items[index] = updatedItem
-        }
         return updatedItem
       } finally {
         this.loading = false

@@ -12,14 +12,6 @@ export async function fetchItems(): Promise<Item[]> {
   return data
 }
 
-export async function fetchItemById(id: number): Promise<Item> {
-  const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}${id}`)
-  if (!response.ok) {
-    throw new Error(`Ошибка при загрузке предмета с ID ${id}`)
-  }
-  return await response.json()
-}
-
 export const fetchItemsWithCategories = async (): Promise<ItemWithCategory[]> => {
   const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}full/`)
   if (!response.ok) throw new Error('Failed to fetch items with categories')
@@ -30,8 +22,18 @@ export const fetchItemsWithCategories = async (): Promise<ItemWithCategory[]> =>
 export const fetchItem = async (id: string): Promise<Item> => {
   const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}${id}`)
   if (!response.ok) throw new Error('Item not found')
+  console.log(response)
   return await response.json()
 }
+
+export async function fetchItemById(id: number): Promise<Item> {
+  const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}${id}`)
+  if (!response.ok) {
+    throw new Error(`Ошибка при загрузке предмета с ID ${id}`)
+  }
+  return await response.json()
+}
+
 
 export const createItem = async (item: ItemCreate): Promise<Item> => {
   const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}`, {
@@ -53,7 +55,12 @@ export const updateItem = async (id: string, item: ItemUpdate): Promise<Item> =>
     },
     body: JSON.stringify(item),
   })
-  if (!response.ok) throw new Error('Failed to update item')
+  console.log(response)
+  if (!response.ok) {
+    const errorData = await response.json()
+    console.error('Детали ошибки:', errorData)
+    throw new Error(`Ошибка ${response.status}: ${JSON.stringify(errorData)}`)
+  }
   return await response.json()
 }
 

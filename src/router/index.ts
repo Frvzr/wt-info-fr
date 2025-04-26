@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
-import ItemsView from '@/views/ItemsView.vue'
 import ItemView from '@/views/ItemView.vue'
 import ServiceView from '@/views/ServiceView.vue'
 import AssetsView from '@/views/AssetsView.vue'
@@ -9,7 +8,6 @@ import ItemDetailView from '@/views/ItemDetailView.vue'
 import ItemCreateView from '@/views/ItemCreateView.vue'
 import ItemEditView from '@/views/ItemEditView.vue'
 import RedressKitConsistView from '@/views/RedressKitsConsistView.vue'
-
 
 const routes: RouteRecordRaw[] = [
   {
@@ -52,7 +50,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/redress-kits',
     name: 'redress-kits',
-    component: RedressKitConsistView
+    component: RedressKitConsistView,
   },
 ]
 
