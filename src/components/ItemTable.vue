@@ -4,6 +4,9 @@ import { useItemStore } from '@/store/modules/itemsStore'
 
 const itemStore = useItemStore()
 
+// Состояние сортировки
+const sortBy = ref([{ key: 'name', order: 'asc' }])
+
 // Загрузка данных при монтировании
 onMounted(() => {
   itemStore.loadItems()
@@ -21,7 +24,7 @@ const columnFilters = ref({
   department: '',
 })
 
-// Упрощенные заголовки
+// Заголовки таблицы
 const headers = [
   { title: 'Name', key: 'name', sortable: true },
   { title: 'Description', key: 'description', sortable: true },
@@ -51,8 +54,8 @@ const filteredItems = computed(() => {
     // Фильтрация по столбцам
     for (const [key, value] of Object.entries(columnFilters.value)) {
       if (value) {
-        const itemValue = item[key as keyof typeof item]
-        if (!itemValue || !itemValue.toString().toLowerCase().includes(value.toLowerCase())) {
+        const itemValue = item[key as keyof typeof item] || ''
+        if (!itemValue.toString().toLowerCase().includes(value.toLowerCase())) {
           return false
         }
       }
@@ -62,82 +65,42 @@ const filteredItems = computed(() => {
   })
 })
 
-// Данные для отображения
+// Данные для отображения (без преобразования null в '—' для корректной сортировки)
 const displayItems = computed(() => {
-  return filteredItems.value.map((item) => ({
-    ...item,
-    name: item.name || '—',
-    description: item.description || '—',
-    category: item.category || '—',
-    group: item.group || '—',
-    source: item.source || '—',
-    operation: item.operation || '—',
-    department: item.department || '—',
-  }))
+  return filteredItems.value
 })
 </script>
 
 <template>
   <div class="items-container">
     <!-- Общий поиск -->
-    <v-text-field
-      v-model="globalSearch"
-      label="Global Search"
-      prepend-inner-icon="mdi-magnify"
-      variant="outlined"
-      clearable
-      class="mb-4"
-    />
+    <v-text-field v-model="globalSearch" label="Global Search" prepend-inner-icon="mdi-magnify" variant="outlined" clearable class="mb-4" />
 
-    <!-- Таблица -->
-    <v-data-table
-      :headers="headers"
-      :items="displayItems"
-      :sort-by="sortBy"
-      :loading="itemStore.loading"
-      item-key="id"
-      class="elevation-1"
-    >
+    <!-- Таблица с правильной сортировкой -->
+    <v-data-table :headers="headers" :items="displayItems" v-model:sort-by="sortBy" :loading="itemStore.loading" item-key="id" class="elevation-1">
       <!-- Шаблон для заголовков -->
       <template v-slot:header="{ header }">
         <th>
           <div class="header-content">
             <span>{{ header.title }}</span>
-            <v-text-field
-              v-if="header.sortable"
-              v-model="columnFilters[header.key]"
-              :placeholder="`Filter ${header.title}`"
-              variant="underlined"
-              density="compact"
-              hide-details
-              clearable
-              class="filter-field"
-            />
+            <v-text-field v-if="header.key !== 'actions'" v-model="columnFilters[header.key]" :placeholder="`Filter ${header.title}`" variant="underlined" density="compact" hide-details clearable class="filter-field" />
           </div>
         </th>
       </template>
 
-      <!-- Отображение данных -->
+      <!-- Отображение данных с обработкой null -->
       <template v-slot:item="{ item }">
         <tr>
-          <td>
-            <strong>{{ item.name }}</strong>
-          </td>
-          <td>{{ item.description }}</td>
-          <td>{{ item.category }}</td>
-          <td>{{ item.group }}</td>
-          <td>{{ item.source }}</td>
-          <td>{{ item.operation }}</td>
-          <td>{{ item.department }}</td>
+          <td><strong>{{ item.name || '—' }}</strong></td>
+          <td>{{ item.description || '—' }}</td>
+          <td>{{ item.category || '—' }}</td>
+          <td>{{ item.group || '—' }}</td>
+          <td>{{ item.source || '—' }}</td>
+          <td>{{ item.operation || '—' }}</td>
+          <td>{{ item.department || '—' }}</td>
           <td>
             <v-btn icon="mdi-eye" variant="text" color="info" :to="`/items/${item.id}`" />
-            <v-btn
-              icon="mdi-pencil"
-              variant="text"
-              color="warning"
-              :to="`/items/${item.id}/edit`"
-              class="ml-2"
-            />
+            <v-btn icon="mdi-pencil" variant="text" color="warning" :to="`/items/${item.id}/edit`" class="ml-2" />
           </td>
         </tr>
       </template>

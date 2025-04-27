@@ -26,7 +26,7 @@ export const fetchItem = async (id: string): Promise<Item> => {
   return await response.json()
 }
 
-export async function fetchItemById(id: number): Promise<Item> {
+export async function fetchItemById(id: string): Promise<Item> {
   const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}${id}`)
   if (!response.ok) {
     throw new Error(`Ошибка при загрузке предмета с ID ${id}`)
@@ -34,6 +34,13 @@ export async function fetchItemById(id: number): Promise<Item> {
   return await response.json()
 }
 
+export async function fetchItemInfoById(id: string): Promise<ItemWithCategory> {
+  const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}info/${id}`)
+  if (!response.ok) {
+    throw new Error(`Ошибка при загрузке предмета с ID ${id}`)
+  }
+  return await response.json()
+}
 
 export const createItem = async (item: ItemCreate): Promise<Item> => {
   const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}`, {

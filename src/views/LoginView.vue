@@ -1,12 +1,14 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-card-title>Авторизация</v-card-title>
+  <v-container class="fill-height">
+    <v-card width="400" class="mx-auto">
+      <v-card-title class="text-center">Вход в систему</v-card-title>
       <v-card-text>
-        <v-form @submit.prevent="handleLogin">
-          <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
-          <v-text-field v-model="password" label="Пароль" type="password" required></v-text-field>
-          <v-btn type="submit" color="primary">Войти</v-btn>
+        <v-form @submit.prevent="login">
+          <v-text-field v-model="email" label="Email" type="email" required />
+          <v-text-field v-model="password" label="Пароль" type="password" required />
+          <v-btn type="submit" color="primary" block class="mt-4">
+            Войти
+          </v-btn>
         </v-form>
       </v-card-text>
     </v-card>
@@ -18,17 +20,16 @@ import { ref } from 'vue'
 import { useAuthStore } from '@/store/modules/auth'
 import { useRouter } from 'vue-router'
 
-const email = ref<string>('')
-const password = ref<string>('')
+const email = ref('admin@example.com')
+const password = ref('admin123')
 const authStore = useAuthStore()
 const router = useRouter()
 
-function handleLogin() {
-  const success = authStore.login(email.value, password.value)
-  if (success) {
-    router.push('/items')
-  } else {
-    alert('Неверный логин или пароль')
+const login = () => {
+  // В реальном приложении здесь будет запрос к API
+  if (email.value && password.value) {
+    authStore.demoLogin() // Используем демо-авторизацию
+    router.push({ name: 'item-list' }) // Перенаправляем после входа
   }
 }
 </script>

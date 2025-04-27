@@ -1,28 +1,32 @@
 <template>
-  <VApp>
-    <!-- Верхняя панель -->
-    <Header />
+  <v-app>
+    <AppSidebar />
 
-    <!-- Боковая панель -->
-    <Sidebar />
+    <v-main>
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </v-main>
 
-    <!-- Основное содержимое -->
-    <VMain>
-      <router-view />
-    </VMain>
-
-    <!-- Нижняя панель -->
-    <Footer />
-  </VApp>
+    <!-- <AppFooter /> -->
+  </v-app>
 </template>
 
 <script setup lang="ts">
-import Header from './Header.vue'
-import Sidebar from './Sidebar.vue'
-import Footer from './Footer.vue'
-import { VApp, VMain } from 'vuetify/components'
+import AppSidebar from '@/components/Layout/AppSidebar.vue'
+// import AppFooter from '@/components/Layout/AppFooter.vue'
 </script>
 
 <style scoped>
-/* Кастомные стили, если необходимо */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

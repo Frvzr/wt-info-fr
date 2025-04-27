@@ -1,16 +1,3 @@
-<script setup lang="ts">
-import { onMounted } from 'vue'
-import { useItemStore } from '@/store/modules/itemsStore'
-import { useRoute } from 'vue-router'
-
-const itemStore = useItemStore()
-const route = useRoute()
-
-onMounted(() => {
-  itemStore.getItem(route.params.id as string)
-})
-</script>
-
 <template>
   <div v-if="itemStore.loading">Loading...</div>
   <div v-else-if="itemStore.error" class="error">{{ itemStore.error }}</div>
@@ -22,7 +9,7 @@ onMounted(() => {
           <v-list-item-title>Description</v-list-item-title>
           <v-list-item-subtitle>{{
             itemStore.currentItem.description || 'N/A'
-          }}</v-list-item-subtitle>
+            }}</v-list-item-subtitle>
         </v-list-item>
 
         <v-list-item>
@@ -44,14 +31,14 @@ onMounted(() => {
           <v-list-item-title>Operation</v-list-item-title>
           <v-list-item-subtitle>{{
             itemStore.currentItem.operation || 'N/A'
-          }}</v-list-item-subtitle>
+            }}</v-list-item-subtitle>
         </v-list-item>
 
         <v-list-item>
           <v-list-item-title>Department</v-list-item-title>
           <v-list-item-subtitle>{{
             itemStore.currentItem.department || 'N/A'
-          }}</v-list-item-subtitle>
+            }}</v-list-item-subtitle>
         </v-list-item>
       </v-list>
     </v-card-text>
@@ -61,3 +48,16 @@ onMounted(() => {
     </v-card-actions>
   </v-card>
 </template>
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { useItemStore } from '@/store/modules/itemsStore'
+import { useRoute } from 'vue-router'
+
+const itemStore = useItemStore()
+const route = useRoute()
+
+onMounted(() => {
+  itemStore.getItemInfoById(route.params.id as string)
+})
+</script>
+<style></style>
