@@ -17,7 +17,7 @@ export const menuItems: MenuItem[] = [
   },
   {
     title: 'Assets Management',
-    icon: 'mdi-format-list-bulleted',
+    icon: 'mdi-package-variant',
     route: { name: 'assets' },
     permission: 'view_items',
     children: [
@@ -37,13 +37,13 @@ export const menuItems: MenuItem[] = [
   },
   {
     title: 'Items Management',
-    icon: 'mdi-format-list-bulleted',
+    icon: 'mdi-archive',
     route: { name: 'item-list' },
     permission: 'view_items',
     children: [
       {
         title: 'Item List',
-        icon: 'mdi-view-list',
+        icon: 'mdi-format-list-bulleted',
         route: { name: 'item-list' },
         permission: 'view_items',
       },
@@ -63,14 +63,20 @@ export const menuItems: MenuItem[] = [
   },
   {
     title: 'Redress Kits',
-    icon: 'mdi-format-list-bulleted',
+    icon: 'mdi-puzzle',
     route: { name: 'redress-kits' },
     permission: 'view_items',
     children: [
       {
         title: 'Redress kits List',
-        icon: 'mdi-view-list',
+        icon: 'mdi-view-dashboard',
         route: { name: 'list-view1' },
+        permission: 'view_items',
+      },
+      {
+        title: 'Redress kits List',
+        icon: 'mdi-view-dashboard',
+        route: { name: 'list-view2' },
         permission: 'view_items',
       },
     ],

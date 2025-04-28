@@ -7,6 +7,7 @@ import ItemDetailView from '@/views/ItemsView/ItemDetailView.vue'
 import ItemCreateView from '@/views/ItemsView/ItemCreateView.vue'
 import ItemEditView from '@/views/ItemsView/ItemEditView.vue'
 import RedressKitConsistView from '@/views/RedressKitsConsistView.vue'
+import RedressKitConsistView2 from '@/views/RedressKitsConsistView2.vue'
 import ItemsLayout from '@/components/Layout/ItemsLayout.vue'
 import ItemSearchView from '@/views/ItemsView/ItemSearchView.vue'
 import AssetsLayout from '@/components/Layout/AssetsLayout.vue'
@@ -125,6 +126,12 @@ const routes: RouteRecordRaw[] = [
         path: 'list-view1',
         name: 'list-view1',
         component: RedressKitConsistView,
+        meta: { title: 'Redress Kits List' },
+      },
+      {
+        path: 'list-view2',
+        name: 'list-view2',
+        component: RedressKitConsistView2,
         meta: { title: 'Redress Kits List' },
       },
     ],
