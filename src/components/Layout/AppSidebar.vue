@@ -1,47 +1,75 @@
 <template>
   <v-navigation-drawer app permanent>
-    <div class="logo-container">
-      <v-img position="left" :src=companyLogo alt="Логотип" max-height="40" class="my-4" @click="$router.push('/')" />
-    </div>
+    <!-- Логотип в верхней части -->
+    <template #prepend>
+      <v-img
+        :src="companyLogo"
+        contain
+        max-height="64"
+        class="my-4 mx-auto"
+        style="cursor: pointer"
+        @click="navigateToHome"
+      />
+    </template>
+
+    <!-- Основное меню -->
     <v-list density="compact">
-      <template v-for="item in filteredMenu" :key="item.title">
+      <template v-for="(item, index) in filteredMenu" :key="index">
+        <!-- Группы меню -->
         <v-list-group v-if="item.children" :value="item.title" :prepend-icon="item.icon">
-          <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" :title="item.title"></v-list-item>
+          <template #activator="{ props: activatorProps }">
+            <v-list-item v-bind="activatorProps" :title="item.title" />
           </template>
 
-          <v-list-item v-for="child in item.children" :key="child.title" :prepend-icon="child.icon" :to="child.route" active-class="active-submenu-item">
-            <v-list-item-title>{{ child.title }}</v-list-item-title>
-          </v-list-item>
+          <v-list-item
+            v-for="(child, childIndex) in item.children"
+            :key="childIndex"
+            :prepend-icon="child.icon"
+            :to="child.route"
+            active-class="active-submenu-item"
+            :title="child.title"
+          />
         </v-list-group>
 
-        <v-list-item v-else :prepend-icon="item.icon" :to="item.route" active-class="active-menu-item">
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
+        <!-- Одиночные пункты меню -->
+        <v-list-item
+          v-else
+          :prepend-icon="item.icon"
+          :to="item.route"
+          active-class="active-menu-item"
+          :title="item.title"
+        />
       </template>
     </v-list>
-    <template v-slot:append>
+
+    <!-- Блок пользователя в нижней части -->
+    <template #append>
       <div class="user-block">
-        <v-divider class="mb-2"></v-divider>
-
-        <v-list-item v-if="authStore.isAuthenticated" @click="$router.push('/profile')">
-          <template v-slot:prepend>
-            <v-avatar size="36" color="primary">
-              <v-img v-if="authStore.user?.avatar" :src="authStore.user.avatar" />
-              <v-icon v-else>mdi-account-circle</v-icon>
-            </v-avatar>
-          </template>
-
-          <v-list-item-title>
-            {{ authStore.user?.name || 'Профиль' }}
-          </v-list-item-title>
-
-          <template v-slot:append>
-            <v-btn variant="text" icon="mdi-logout" @click.stop="logout" />
-          </template>
-        </v-list-item>
-
-        <v-btn v-else block color="primary" prepend-icon="mdi-login" @click="$router.push('/login')" class="mb-2">
+        <v-divider />
+        <template v-if="authStore.isAuthenticated">
+          <v-list-item @click="navigateToProfile">
+            <template #prepend>
+              <v-avatar color="primary" size="36">
+                <v-img v-if="authStore.user?.avatar" :src="authStore.user.avatar" />
+                <v-icon v-else>mdi-account-circle</v-icon>
+              </v-avatar>
+            </template>
+            <v-list-item-title>
+              {{ authStore.user?.name || 'Профиль' }}
+            </v-list-item-title>
+            <template #append>
+              <v-btn variant="text" icon="mdi-logout" @click.stop="logout" />
+            </template>
+          </v-list-item>
+        </template>
+        <v-btn
+          v-else
+          block
+          color="primary"
+          prepend-icon="mdi-login"
+          @click="navigateToLogin"
+          class="mt-2"
+        >
           Войти
         </v-btn>
       </div>
@@ -54,19 +82,25 @@ import { computed } from 'vue'
 import { useAuthStore } from '@/store/modules/auth'
 import companyLogo from '@/assets/logo-green.svg'
 import { menuItems } from '@/config/menu'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const authStore = useAuthStore()
 
 const filteredMenu = computed(() => {
-  return menuItems.filter(item => {
-    if (!item.permission) return true
-    return authStore.hasPermission(item.permission)
+  return menuItems.filter((item) => {
+    return !item.permission || authStore.hasPermission(item.permission)
   })
 })
+
+const navigateToHome = () => router.push('/')
+const navigateToProfile = () => router.push('/profile')
+const navigateToLogin = () => router.push('/login')
 
 const logout = async () => {
   try {
     await authStore.logout()
+    navigateToLogin()
   } catch (error) {
     console.error('Ошибка при выходе:', error)
   }
@@ -84,22 +118,11 @@ const logout = async () => {
   color: rgb(25, 118, 210);
 }
 
-.v-list-item--active {
-  transition: all 0.3s ease;
-}
-
-.logo-container {
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0 16px;
-}
-
 .user-block {
   padding: 8px;
 }
 
-.v-avatar {
-  margin-right: 12px;
+.v-list-item {
+  cursor: pointer;
 }
 </style>

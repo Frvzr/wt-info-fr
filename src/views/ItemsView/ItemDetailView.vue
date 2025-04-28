@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import ItemView from '@/components/ItemDetails.vue'
+import ItemDetailView from '@/components/ItemsComponents/ItemDetails.vue'
 </script>
 
 <template>
-  <ItemView />
+  <ItemDetailView />
 </template>
+
+<style></style>

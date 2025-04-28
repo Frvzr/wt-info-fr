@@ -12,26 +12,28 @@ export const menuItems: MenuItem[] = [
   {
     title: 'TPC Activity',
     icon: 'mdi-tools',
-    route: { name: 'service' }
+    route: { name: 'redress' },
+    permission: 'view_items',
   },
   {
     title: 'Assets Management',
-    icon: 'mdi-package-variant',
+    icon: 'mdi-format-list-bulleted',
     route: { name: 'assets' },
+    permission: 'view_items',
     children: [
-    {
-      title: 'Assets List',
-      icon: 'mdi-view-list',
-      route: { name: 'assets-list' },
-      permission: 'view_assets'
-    },
-    // {
-    //   title: 'Create Asset',
-    //   icon: 'mdi-plus-box',
-    //   route: { name: 'create-asset' },
-    //   permission: 'edit_assets'
-    // }
-  ]
+      {
+        title: 'Assets List',
+        icon: 'mdi-view-list',
+        route: { name: 'assets-list' },
+        permission: 'view_items',
+      },
+      // {
+      //   title: 'Create Asset',
+      //   icon: 'mdi-plus-box',
+      //   route: { name: 'create-asset' },
+      //   permission: 'edit_assets'
+      // }
+    ],
   },
   {
     title: 'Items Management',
@@ -43,29 +45,34 @@ export const menuItems: MenuItem[] = [
         title: 'Item List',
         icon: 'mdi-view-list',
         route: { name: 'item-list' },
-        permission: 'view_items'
+        permission: 'view_items',
       },
       {
         title: 'Search Item',
         icon: 'mdi-magnify',
         route: { name: 'item-search' },
-        permission: 'view_items'
+        permission: 'view_items',
       },
       {
         title: 'Create Item',
         icon: 'mdi-plus-box',
         route: { name: 'create-item' },
-        permission: 'edit_items'
-      }
-    ]
+        permission: 'edit_items',
+      },
+    ],
   },
   {
-  title: 'Redress Kits',
-  icon: 'mdi-package-variant',
-  route: { name: 'redress-kits' },
-  permission: 'view_redress_kits' ,
-  children: [
-
-  ]
-  }
+    title: 'Redress Kits',
+    icon: 'mdi-format-list-bulleted',
+    route: { name: 'redress-kits' },
+    permission: 'view_items',
+    children: [
+      {
+        title: 'Redress kits List',
+        icon: 'mdi-view-list',
+        route: { name: 'list-view1' },
+        permission: 'view_items',
+      },
+    ],
+  },
 ]

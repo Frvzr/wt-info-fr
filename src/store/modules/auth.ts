@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
       id: '1',
       name: 'Admin',
       email: 'admin@example.com',
-      permissions: ['view_items', 'edit_items']
+      permissions: ['view_items', 'edit_items'],
     }
     token.value = 'demo-token'
   }
@@ -38,6 +38,6 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated: computed(() => !!token.value),
     demoLogin,
     logout,
-    hasPermission
+    hasPermission,
   }
 })

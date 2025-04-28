@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ItemForm from '@/components/ItemForm.vue'
+import ItemForm from '@/components/ItemsComponents/ItemForm.vue'
 import { useItemStore } from '@/store/modules/itemsStore'
 import type { ItemCreate } from '@/types/itemsTypes'
 import { useRouter } from 'vue-router'

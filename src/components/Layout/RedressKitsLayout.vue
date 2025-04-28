@@ -1,6 +1,6 @@
 <template>
-  <div class="assets-layout">
-    <v-breadcrumbs :assets="breadcrumbs" class="px-4 py-2">
+  <div class="redress-kit-layout">
+    <v-breadcrumbs :kits="breadcrumbs" class="px-4 py-2">
       <template v-slot:divider>
         <v-icon icon="mdi-chevron-right"></v-icon>
       </template>
@@ -26,12 +26,12 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const breadcrumbs = computed(() => {
-  const crumbs = [{ title: 'Assets', disabled: false, to: { name: 'assets-list' } }]
+  const crumbs = [{ title: 'Redress Kits', disabled: false, to: { name: 'list-view1' } }]
 
   if (route.meta.title) {
     crumbs.push({
       title: route.meta.title as string,
-      disabled: route.name === 'assets-list',
+      disabled: route.name === 'list-view1',
       to: route.path,
     })
   }
@@ -41,7 +41,7 @@ const breadcrumbs = computed(() => {
 </script>
 
 <style scoped>
-.assets-layout {
+.redress-kit-layout {
   padding: 20px;
 }
 

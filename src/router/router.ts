@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
-import ItemView from '@/views/ItemView.vue'
-import ServiceView from '@/views/ServiceView.vue'
+import ItemView from '@/views/ItemsView/ItemView.vue'
 import AssetsView from '@/views/AssetsView.vue'
 import ItemDetailView from '@/views/ItemsView/ItemDetailView.vue'
 import ItemCreateView from '@/views/ItemsView/ItemCreateView.vue'
@@ -11,13 +10,14 @@ import RedressKitConsistView from '@/views/RedressKitsConsistView.vue'
 import ItemsLayout from '@/components/Layout/ItemsLayout.vue'
 import ItemSearchView from '@/views/ItemsView/ItemSearchView.vue'
 import AssetsLayout from '@/components/Layout/AssetsLayout.vue'
+import RedressKitsLayout from '@/components/Layout/RedressKitsLayout.vue'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'login',
     component: LoginView,
-    meta: {public: true}
+    meta: { public: true },
   },
   {
     path: '/items',
@@ -29,7 +29,11 @@ const routes: RouteRecordRaw[] = [
         path: 'list',
         name: 'item-list',
         component: ItemView,
-        meta: { title: 'Item List' }
+        meta: {
+          title: 'Item List',
+          requiresAuth: true,
+          permissions: ['view_items'],
+        },
       },
       {
         path: '/item-search',
@@ -38,36 +42,34 @@ const routes: RouteRecordRaw[] = [
         meta: {
           title: 'Search item',
           requiresAuth: true,
-          permissions: ['view_items']
-        }
+          permissions: ['view_items'],
+        },
       },
       {
         path: 'create',
         name: 'create-item',
         component: ItemCreateView,
-        meta: { title: 'Create Item' }
+        meta: {
+          title: 'Create Item',
+          requiresAuth: true,
+          permissions: ['view_items'],
+        },
       },
       {
         path: ':id',
         name: 'item-detail',
         component: ItemDetailView,
         props: true,
-        meta: { title: 'Item Details' }
+        meta: { title: 'Item Details' },
       },
       {
         path: ':id/edit',
         name: 'edit-item',
         component: ItemEditView,
         props: true,
-        meta: { title: 'Edit Item' }
-      }
-    ]
-  },
-  {
-    path: '/service',
-    name: 'service',
-    component: ServiceView,
-    meta: { title: 'TPC Activity' }
+        meta: { title: 'Edit Item' },
+      },
+    ],
   },
   {
     path: '/assets',
@@ -79,8 +81,8 @@ const routes: RouteRecordRaw[] = [
         path: 'list',
         name: 'assets-list',
         component: AssetsView,
-        meta: { title: 'Assets List' }
-      }
+        meta: { title: 'Assets List' },
+      },
       // {
       //   path: '/assets-search',
       //   name: 'assets-search',
@@ -111,13 +113,35 @@ const routes: RouteRecordRaw[] = [
       //   props: true,
       //   meta: { title: 'Edit Item' }
       // }
-    ]
+    ],
   },
   {
     path: '/redress-kits',
     name: 'redress-kits',
-    component: RedressKitConsistView,
-    meta: { title: 'Redress Kits' }
+    component: RedressKitsLayout,
+    meta: { title: 'Redress Kits' },
+    children: [
+      {
+        path: 'list-view1',
+        name: 'list-view1',
+        component: RedressKitConsistView,
+        meta: { title: 'Redress Kits List' },
+      },
+    ],
+  },
+  {
+    path: '/redress',
+    name: 'redress',
+    component: RedressKitsLayout,
+    meta: { title: 'Redress System' },
+    children: [
+      {
+        path: 'list',
+        name: 'redres-system-list',
+        component: RedressKitConsistView,
+        meta: { title: 'Redress System List' },
+      },
+    ],
   },
 ]
 

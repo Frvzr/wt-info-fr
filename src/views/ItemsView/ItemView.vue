@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ItemTable from '@/components/ItemTable.vue'
+import ItemTable from '@/components/ItemsComponents/ItemTable.vue'
 import { useItemStore } from '@/store/modules/itemsStore'
 
 const itemStore = useItemStore()
