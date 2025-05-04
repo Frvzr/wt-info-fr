@@ -12,8 +12,15 @@ import ItemsLayout from '@/components/Layout/ItemsLayout.vue'
 import ItemSearchView from '@/views/ItemsView/ItemSearchView.vue'
 import AssetsLayout from '@/components/Layout/AssetsLayout.vue'
 import RedressKitsLayout from '@/components/Layout/RedressKitsLayout.vue'
+import MainView from '@/views/MainView.vue'
 
 const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'main',
+    component: MainView,
+    meta: { public: true },
+  },
   {
     path: '/login',
     name: 'login',

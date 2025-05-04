@@ -5,6 +5,8 @@ import {
   updateItem,
   fetchItemInfoById,
   fetchItemById,
+  deleteItem,
+  markDelete
 } from '@/api/itemsApi'
 import type { Item, ItemWithCategory, ItemCreate, ItemUpdate } from '@/types/itemsTypes'
 
@@ -83,5 +85,32 @@ export const useItemStore = defineStore('items', {
       this.error = error instanceof Error ? error.message : defaultMessage
       console.error(error)
     },
+
+    async deleteItem(id: string) {
+      this.loading = true
+      try {
+        await deleteItem(id, this.editedItem as Item)
+        this.items = this.items.filter((item) => item.id !== id)
+        this.editedItem = null
+      } catch (error) {
+        this.handleError(error, 'Failed to delete item')
+      } finally {
+        this.loading = false
+      }
+    },
+    async markDelete(id: string) {
+      this.loading = true
+      try {
+        await markDelete(id, this.editedItem as Item)
+        this.items = this.items.filter((item) => item.id !== id)
+        this.editedItem = null
+      } catch (error) {
+        this.handleError(error, 'Failed to delete item')
+      } finally {
+        this.loading = false
+    }
+  }
   }
 })
+
+

@@ -82,3 +82,31 @@ export const patchItem = async (id: string, item: Partial<ItemUpdate>): Promise<
   if (!response.ok) throw new Error('Failed to patch item')
   return await response.json()
 }
+
+
+export const deleteItem = async (id: string, item: Item): Promise<Response> => {
+
+const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}${id}`, {
+  method: 'DELETE',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(item),
+});
+if (!response.ok) {
+  throw new Error('Failed to delete item');
+}
+return response;
+}
+
+export const markDelete = async (id: string, item: Item): Promise<Response> => {
+  const response = await fetch(`${API_BASE_URL}${API_BASE__URL_ITEM_V1}${id}/mark-delete`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(item),
+  })
+  if (!response.ok) throw new Error('Failed to patch item')
+  return await response.json()
+}

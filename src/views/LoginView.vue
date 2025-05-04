@@ -29,7 +29,7 @@ const login = () => {
   // В реальном приложении здесь будет запрос к API
   if (email.value && password.value) {
     authStore.demoLogin() // Используем демо-авторизацию
-    router.push({ name: 'item-list' }) // Перенаправляем после входа
+    router.push({ name: 'main' }) // Перенаправляем после входа
   }
 }
 </script>
