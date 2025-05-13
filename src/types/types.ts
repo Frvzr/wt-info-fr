@@ -37,6 +37,7 @@ export interface Asset {
   serial_number: string
   part_number: string
   description: string
+  status: string
 }
 
 export interface Activity {

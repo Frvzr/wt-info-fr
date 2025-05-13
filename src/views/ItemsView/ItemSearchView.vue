@@ -1,10 +1,9 @@
 <template>
   <div class="item-search-view">
     <v-container>
-      <!-- Поисковая строка -->
       <v-row>
         <v-col cols="12" md="8" offset-md="2">
-          <v-text-field v-model="searchQuery" label="Введите название товара (* или % для поиска по шаблону)" prepend-inner-icon="mdi-magnify" clearable @keyup.enter="searchItem" @click:clear="clearSearch">
+          <v-text-field v-model="searchQuery" label="Введите название товара (% для поиска по шаблону)" prepend-inner-icon="mdi-magnify" clearable @keyup.enter="searchItem" @click:clear="clearSearch">
             <template v-slot:append>
               <v-btn color="primary" @click="searchItem" :loading="loading">
                 Search
@@ -17,7 +16,6 @@
         </v-col>
       </v-row>
 
-      <!-- Результаты поиска -->
       <v-row v-if="searchResults.length > 0">
         <v-col cols="12">
           <v-card>
@@ -34,7 +32,6 @@
         </v-col>
       </v-row>
 
-      <!-- Сообщения о состоянии -->
       <v-row v-if="errorMessage">
         <v-col cols="12">
           <v-alert type="error">{{ errorMessage }}</v-alert>
@@ -60,9 +57,8 @@ const loading = ref(false)
 const errorMessage = ref('')
 const searchPerformed = ref(false)
 
-// Функция для преобразования шаблона поиска в RegExp
 const createSearchPattern = (query: string) => {
-  if (query.includes('*') || query.includes('%')) {
+  if (query.includes('%')) {
     const pattern = query
       .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       .replace(/\*|%/g, '.*')
@@ -77,7 +73,6 @@ const searchResults = computed(() => {
   return itemStore.items.filter(item => pattern.test(item.name))
 })
 
-// Генерация маршрута к детальной странице
 const getItemDetailRoute = (id: string) => {
   return {
     name: 'item-detail',
