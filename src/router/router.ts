@@ -13,6 +13,7 @@ import ItemSearchView from '@/views/ItemsView/ItemSearchView.vue'
 import AssetsLayout from '@/components/Layout/AssetsLayout.vue'
 import RedressKitsLayout from '@/components/Layout/RedressKitsLayout.vue'
 import MainView from '@/views/MainView.vue'
+import ActivityListView from '@/views/RedressSystemView/ActivityListView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -151,8 +152,8 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: 'list',
-        name: 'redres-system-list',
-        component: RedressKitConsistView,
+        name: 'history',
+        component: ActivityListView,
         meta: { title: 'Redress System List' },
       },
     ],

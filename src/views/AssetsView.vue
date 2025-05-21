@@ -5,6 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import AsetList from '@/components/AssetList.vue'
+import AsetList from '@/components/AssetsComponents/AssetList.vue'
 </script>
-

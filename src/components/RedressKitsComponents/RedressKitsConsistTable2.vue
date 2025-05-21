@@ -6,14 +6,32 @@
       <v-card-text>
         <div class="d-flex flex-wrap align-center gap-4">
           <!-- Выбор Redress Kit -->
-          <v-autocomplete v-model="selectedKit" :items="availableKits" label="Redress Kit" item-title="redress_kit" item-value="redress_kit" :items-per-page="-1" clearable style="min-width: 300px" @update:modelValue="loadRevisions">
+          <v-autocomplete
+            v-model="selectedKit"
+            :items="availableKits"
+            label="Redress Kit"
+            item-title="redress_kit"
+            item-value="redress_kit"
+            :items-per-page="-1"
+            clearable
+            style="min-width: 300px"
+            @update:modelValue="loadRevisions"
+          >
             <template v-slot:item="{ props, item }">
               <v-list-item v-bind="props" :subtitle="item.raw.desc_redress_kit"></v-list-item>
             </template>
           </v-autocomplete>
 
           <!-- Выбор Revision -->
-          <v-autocomplete v-model="selectedRevision" :items="availableRevisions" label="Revision" :disabled="!selectedKit" clearable style="min-width: 200px" @update:modelValue="loadKitContents"></v-autocomplete>
+          <v-autocomplete
+            v-model="selectedRevision"
+            :items="availableRevisions"
+            label="Revision"
+            :disabled="!selectedKit"
+            clearable
+            style="min-width: 200px"
+            @update:modelValue="loadKitContents"
+          ></v-autocomplete>
         </div>
       </v-card-text>
     </v-card>
@@ -21,7 +39,12 @@
     <!-- Таблица с элементами -->
     <v-card v-if="kitContents.length > 0">
       <v-card-title>Kit Contents</v-card-title>
-      <v-data-table-virtual :headers="headers" :items="kitContents" :items-per-page="10" class="elevation-1">
+      <v-data-table-virtual
+        :headers="headers"
+        :items="kitContents"
+        :items-per-page="10"
+        class="elevation-1"
+      >
         <template v-slot:item.quantity="{ item }">
           <span class="font-weight-bold">{{ item.quantity }}</span>
         </template>
@@ -55,11 +78,11 @@ const headers = [
 // Доступные комплекты (уникальные значения)
 const availableKits = computed(() => {
   const kits = new Map()
-  redressKitStore.redressKitConsist.forEach(item => {
+  redressKitStore.redressKitConsist.forEach((item) => {
     if (!kits.has(item.redress_kit)) {
       kits.set(item.redress_kit, {
         redress_kit: item.redress_kit,
-        desc_redress_kit: item.desc_redress_kit
+        desc_redress_kit: item.desc_redress_kit,
       })
     }
   })
@@ -71,7 +94,7 @@ const availableRevisions = computed(() => {
   if (!selectedKit.value) return []
   const revisions = new Set()
 
-  redressKitStore.redressKitConsist.forEach(item => {
+  redressKitStore.redressKitConsist.forEach((item) => {
     if (item.redress_kit === selectedKit.value) {
       revisions.add(item.revision)
     }
@@ -105,8 +128,7 @@ const loadKitContents = async () => {
   try {
     // Фильтруем данные по выбранным параметрам
     kitContents.value = redressKitStore.redressKitConsist.filter(
-      item => item.redress_kit === selectedKit.value &&
-        item.revision === selectedRevision.value
+      (item) => item.redress_kit === selectedKit.value && item.revision === selectedRevision.value,
     )
   } finally {
     loading.value = false

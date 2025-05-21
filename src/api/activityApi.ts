@@ -1,9 +1,9 @@
-import type { Activity } from '@/types/types'
+import type { ActivityList } from '@/types/activityTypes'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-export async function fetchActivity(): Promise<Activity[]> {
-  const response = await fetch(`${API_BASE_URL}/activity`)
+export async function fetchActivity(): Promise<ActivityList[]> {
+  const response = await fetch(`${API_BASE_URL}/redress/history`)
   if (!response.ok) {
     throw new Error('Ошибка при загрузке данных')
   }
@@ -12,8 +12,8 @@ export async function fetchActivity(): Promise<Activity[]> {
   return data
 }
 
-export async function fetchActivityById(id: string): Promise<Activity> {
-  const response = await fetch(`${API_BASE_URL}/activity/${id}`)
+export async function fetchActivityByAsset(id: string): Promise<ActivityList[]> {
+  const response = await fetch(`${API_BASE_URL}/redress/history/${id}`)
   if (!response.ok) {
     throw new Error(`Ошибка при загрузке данных с ID ${id}`)
   }

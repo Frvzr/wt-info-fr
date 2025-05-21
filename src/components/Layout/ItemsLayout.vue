@@ -1,3 +1,24 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const breadcrumbs = computed(() => {
+  const crumbs = [{ title: 'Items', disabled: false, to: { name: 'item-list' } }]
+
+  if (route.meta.title) {
+    crumbs.push({
+      title: route.meta.title as string,
+      disabled: route.name === 'item-list',
+      to: route.path,
+    })
+  }
+
+  return crumbs
+})
+</script>
+
 <template>
   <div class="items-layout">
     <v-breadcrumbs :items="breadcrumbs" class="px-4 py-2">
@@ -18,29 +39,6 @@
     </router-view>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-
-const breadcrumbs = computed(() => {
-  const crumbs = [
-    { title: 'Items', disabled: false, to: { name: 'item-list' } }
-  ]
-
-  if (route.meta.title) {
-    crumbs.push({
-      title: route.meta.title as string,
-      disabled: route.name === 'item-list',
-      to: route.path
-    })
-  }
-
-  return crumbs
-})
-</script>
 
 <style scoped>
 .items-layout {

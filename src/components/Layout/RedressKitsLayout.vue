@@ -1,24 +1,3 @@
-<template>
-  <div class="redress-kit-layout">
-    <v-breadcrumbs :kits="breadcrumbs" class="px-4 py-2">
-      <template v-slot:divider>
-        <v-icon icon="mdi-chevron-right"></v-icon>
-      </template>
-      <template v-slot:title="{ item }">
-        <span :class="{ 'text-grey': item.disabled }">{{ item.title }}</span>
-      </template>
-    </v-breadcrumbs>
-
-    <v-divider class="mb-4"></v-divider>
-
-    <router-view v-slot="{ Component }">
-      <transition name="fade" mode="out-in">
-        <component :is="Component" />
-      </transition>
-    </router-view>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
@@ -39,6 +18,27 @@ const breadcrumbs = computed(() => {
   return crumbs
 })
 </script>
+
+<template>
+  <div class="redress-kit-layout">
+    <v-breadcrumbs :kits="breadcrumbs" class="px-4 py-2">
+      <template v-slot:divider>
+        <v-icon icon="mdi-chevron-right"></v-icon>
+      </template>
+      <template v-slot:title="{ item }">
+        <span :class="{ 'text-grey': item.disabled }">{{ item.title }}</span>
+      </template>
+    </v-breadcrumbs>
+
+    <v-divider class="mb-4"></v-divider>
+
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </div>
+</template>
 
 <style scoped>
 .redress-kit-layout {

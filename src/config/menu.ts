@@ -14,6 +14,13 @@ export const menuItems: MenuItem[] = [
     icon: 'mdi-tools',
     route: { name: 'redress' },
     permission: 'view_items',
+    children: [
+      {
+        title: 'Activity',
+        icon: 'mdi-view-list',
+        route: { name: 'history' },
+      },
+    ],
   },
   {
     title: 'Assets Management',

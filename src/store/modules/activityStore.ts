@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
-import type { Activity } from '@/types/types'
-import { fetchActivity } from '@/api/activity'
+import type { ActivityList } from '@/types/activityTypes'
+import { fetchActivity } from '@/api/activityApi'
 
 export const useActivityStore = defineStore('activity', {
   state: () => ({
-    activity: [] as Activity[],
+    activity: [] as ActivityList[],
   }),
   actions: {
     async loadActivity() {

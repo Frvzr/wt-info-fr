@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import RedressKitsConsist from '@/components/RedressKitsConsistTable2.vue'
+import RedressKitsConsist from '@/components/RedressKitsComponents/RedressKitsConsistTable2.vue'
 </script>
