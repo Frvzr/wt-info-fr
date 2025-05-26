@@ -9,3 +9,12 @@ export interface ActivityList {
   top_tool: string
   location: string
 }
+
+export interface RedressActivity {
+  id: string
+  serial_number: string
+  part_number: string
+  level: string
+  assigned_date: Date
+  completed_date: Date
+}
