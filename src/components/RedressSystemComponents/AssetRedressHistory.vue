@@ -17,7 +17,12 @@ const headers = [
 </script>
 <template>
   <div>
-    <v-data-table :headers="headers" :items="redressHistory"> </v-data-table>
+    <v-data-table
+      :headers="headers"
+      :items="redressHistory"
+      density="compact"
+      class="elevation-0"
+    ></v-data-table>
   </div>
 </template>
 <style scoped></style>

@@ -20,6 +20,11 @@ export const menuItems: MenuItem[] = [
         icon: 'mdi-view-list',
         route: { name: 'history' },
       },
+      {
+        title: 'Redress System',
+        icon: 'mdi-view-list',
+        route: { name: 'redress-system' },
+      },
     ],
   },
   {

@@ -14,6 +14,8 @@ import AssetsLayout from '@/components/Layout/AssetsLayout.vue'
 import RedressKitsLayout from '@/components/Layout/RedressKitsLayout.vue'
 import MainView from '@/views/MainView.vue'
 import ActivityListView from '@/views/RedressSystemView/ActivityListView.vue'
+import RedressSystem from '@/views/RedressSystemView/RedressSystemView.vue'
+import RedressSystemView from '@/views/RedressSystemView/RedressSystemView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -155,6 +157,12 @@ const routes: RouteRecordRaw[] = [
         name: 'history',
         component: ActivityListView,
         meta: { title: 'Redress System List' },
+      },
+      {
+        path: 'system',
+        name: 'redress-system',
+        component: RedressSystemView,
+        meta: { title: 'Redress System' },
       },
     ],
   },
