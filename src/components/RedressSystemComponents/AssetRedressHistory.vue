@@ -5,7 +5,7 @@ import { useActivityStore } from '@/store/modules/activityStore'
 const activityStore = useActivityStore()
 const redressHistory = computed(() => activityStore.activityById)
 
-onMounted(() => activityStore.getRedressHistoryByAsset('W124000088'))
+onMounted(() => activityStore.getRedressHistoryByAsset('06ad3622-0837-4d22-8f7e-c57663a5de55'))
 
 const headers = [
   { title: 'Complete', key: 'status' },
@@ -22,6 +22,7 @@ const headers = [
       :items="redressHistory"
       density="compact"
       class="elevation-0"
+      hide-default-footer
     ></v-data-table>
   </div>
 </template>

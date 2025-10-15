@@ -20,8 +20,8 @@ export async function fetchActivityByAsset(id: string): Promise<ActivityList[]> 
   return await response.json()
 }
 
-export async function fetchActivityByUSer(id: string): Promise<RedressActivity[]> {
-  const response = await fetch(`${API_BASE_URL}/redress/user-redresses`)
+export async function fetchActivityByUSer(username: string): Promise<RedressActivity[]> {
+  const response = await fetch(`${API_BASE_URL}/redress/user-redresses/${username}`)
   if (!response.ok) {
     throw new Error('Ошибка при загрузке данных')
   }

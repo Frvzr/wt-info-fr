@@ -21,6 +21,7 @@ const headers = [
     :items="myRedress"
     density="compact"
     class="elevation-0"
+    hide-default-footer
   ></v-data-table>
 </template>
 <style scoped></style>

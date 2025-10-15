@@ -7,21 +7,18 @@ import AssetRedressHistory from '@/components/RedressSystemComponents/AssetRedre
 <template>
   <v-container class="redress-container" fluid>
     <v-row>
-      <!-- Левая колонка: MyRedress -->
       <v-col cols="12" md="3" class="pr-md-2">
         <v-card elevation="1" class="h-100">
           <MyRedress />
         </v-card>
       </v-col>
 
-      <!-- Центральная колонка: StartRedress -->
       <v-col cols="12" md="6" class="px-md-2">
         <v-card elevation="1" class="start-redress-card h-100">
           <StartRedress />
         </v-card>
       </v-col>
 
-      <!-- Правая колонка: AssetRedressHistory -->
       <v-col cols="12" md="3" class="pl-md-2">
         <v-card elevation="1" class="h-100">
           <AssetRedressHistory />
@@ -39,15 +36,14 @@ import AssetRedressHistory from '@/components/RedressSystemComponents/AssetRedre
 }
 
 .start-redress-card {
-  background-color: #f8f9fa; /* Светло-серый фон */
-  border-left: 4px solid #1976d2; /* Синяя акцентная полоса */
+  background-color: #f8f9fa;
+  border-left: 4px solid #1976d2;
 }
 
 .h-100 {
   height: 100%;
 }
 
-/* Адаптация для мобильных */
 @media (max-width: 960px) {
   .pr-md-2,
   .pl-md-2,
